@@ -20,7 +20,7 @@ const studentSchema = new mongoose.Schema(
     },
     Email: {
       type: String,
-      required: true, // Ensure this matches your route's expectations
+      required: true, 
       unique: true,
       trim: true,
     },
