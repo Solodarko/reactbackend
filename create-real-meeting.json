@@ -1,0 +1,16 @@
+{
+  "topic": "Live Participant Tracking Test - Real Meeting",
+  "type": 1,
+  "start_time": "2025-08-17T22:50:00.000Z",
+  "duration": 120,
+  "settings": {
+    "host_video": true,
+    "participant_video": true,
+    "join_before_host": true,
+    "mute_upon_entry": false,
+    "waiting_room": false,
+    "approval_type": 0,
+    "auto_recording": "none"
+  },
+  "agenda": "Testing real-time participant tracking system"
+}

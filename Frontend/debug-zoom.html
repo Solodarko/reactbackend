@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom Signature Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 12px; }
+        button { padding: 10px 15px; margin: 5px; border: none; border-radius: 3px; cursor: pointer; }
+        .primary { background: #007bff; color: white; }
+        .success-btn { background: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Zoom Signature Debug Tool</h1>
+    
+    <div class="section">
+        <h3>Step 1: Create Meeting</h3>
+        <button class="primary" onclick="createMeeting()">Create Test Meeting</button>
+        <div id="meeting-result"></div>
+    </div>
+    
+    <div class="section">
+        <h3>Step 2: Generate Signature</h3>
+        <button class="primary" onclick="generateSignature()">Generate Signature</button>
+        <div id="signature-result"></div>
+    </div>
+    
+    <div class="section">
+        <h3>Step 3: Validate JWT</h3>
+        <button class="primary" onclick="validateJWT()">Validate JWT Payload</button>
+        <div id="jwt-result"></div>
+    </div>
+    
+    <div class="section">
+        <h3>Step 4: Test Format Matching</h3>
+        <input type="text" id="test-meeting-id" placeholder="Enter Meeting ID" value="">
+        <button class="success-btn" onclick="testFormats()">Test Number Formats</button>
+        <div id="format-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api/simple-zoom';
+        let currentMeeting = null;
+        let currentSignature = null;
+
+        function log(elementId, content, className = '') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = content;
+            element.className = className;
+        }
+
+        async function createMeeting() {
+            try {
+                const response = await fetch(`${API_BASE}/create-meeting`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: `Debug Meeting - ${new Date().toLocaleString()}`,
+                        duration: 30
+                    })
+                });
+                
+                const data = await response.json();
+                currentMeeting = data.meeting;
+                
+                document.getElementById('test-meeting-id').value = currentMeeting.id;
+                
+                log('meeting-result', 
+                    `<h4>✅ Meeting Created</h4>
+                     <pre>${JSON.stringify(data, null, 2)}</pre>
+                     <p><strong>Meeting ID:</strong> ${currentMeeting.id}</p>
+                     <p><strong>Type:</strong> ${typeof currentMeeting.id}</p>
+                     <p><strong>Length:</strong> ${currentMeeting.id.toString().length}</p>`,
+                    'success'
+                );
+            } catch (error) {
+                log('meeting-result', `<h4>❌ Error</h4><pre>${error.message}</pre>`, 'error');
+            }
+        }
+
+        async function generateSignature() {
+            if (!currentMeeting) {
+                log('signature-result', '❌ Please create a meeting first', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/generate-signature`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        meetingNumber: currentMeeting.id,
+                        role: 0
+                    })
+                });
+                
+                const data = await response.json();
+                currentSignature = data;
+                
+                log('signature-result', 
+                    `<h4>✅ Signature Generated</h4>
+                     <pre>${JSON.stringify(data, null, 2)}</pre>
+                     <p><strong>Original Meeting ID:</strong> ${currentMeeting.id}</p>
+                     <p><strong>Returned Meeting Number:</strong> ${data.meetingNumber}</p>
+                     <p><strong>Match:</strong> ${currentMeeting.id.toString() === data.meetingNumber.toString() ? '✅ YES' : '❌ NO'}</p>`,
+                    'success'
+                );
+            } catch (error) {
+                log('signature-result', `<h4>❌ Error</h4><pre>${error.message}</pre>`, 'error');
+            }
+        }
+
+        function validateJWT() {
+            if (!currentSignature) {
+                log('jwt-result', '❌ Please generate a signature first', 'error');
+                return;
+            }
+            
+            try {
+                // Decode JWT payload (not verifying, just reading)
+                const parts = currentSignature.signature.split('.');
+                if (parts.length !== 3) {
+                    throw new Error('Invalid JWT format');
+                }
+                
+                const payload = JSON.parse(atob(parts[1]));
+                
+                log('jwt-result', 
+                    `<h4>✅ JWT Payload Decoded</h4>
+                     <pre>${JSON.stringify(payload, null, 2)}</pre>
+                     <p><strong>Meeting Number in JWT:</strong> ${payload.meetingNumber}</p>
+                     <p><strong>Original Meeting ID:</strong> ${currentMeeting.id}</p>
+                     <p><strong>Match:</strong> ${payload.meetingNumber === currentMeeting.id.toString() ? '✅ YES' : '❌ NO'}</p>
+                     <p><strong>Expires:</strong> ${new Date(payload.exp * 1000).toLocaleString()}</p>`,
+                    'success'
+                );
+            } catch (error) {
+                log('jwt-result', `<h4>❌ Error</h4><pre>${error.message}</pre>`, 'error');
+            }
+        }
+
+        function testFormats() {
+            const testId = document.getElementById('test-meeting-id').value;
+            if (!testId) {
+                log('format-result', '❌ Please enter a meeting ID', 'error');
+                return;
+            }
+            
+            const original = testId;
+            const asString = String(testId);
+            const cleaned = asString.replace(/[^0-9]/g, '');
+            const hasNonNumeric = /[^0-9]/.test(asString);
+            const isValidFormat = /^\d{9,11}$/.test(cleaned);
+            
+            log('format-result', 
+                `<h4>🔧 Format Analysis</h4>
+                 <p><strong>Original:</strong> "${original}" (${typeof testId})</p>
+                 <p><strong>As String:</strong> "${asString}"</p>
+                 <p><strong>Cleaned:</strong> "${cleaned}"</p>
+                 <p><strong>Length:</strong> ${cleaned.length}</p>
+                 <p><strong>Has Non-Numeric:</strong> ${hasNonNumeric ? '❌ YES' : '✅ NO'}</p>
+                 <p><strong>Valid Format:</strong> ${isValidFormat ? '✅ YES' : '❌ NO'}</p>
+                 <p><strong>Regex Test:</strong> ${/^\d{9,11}$/.test(cleaned) ? '✅ PASS' : '❌ FAIL'}</p>`,
+                'success'
+            );
+        }
+
+        // Auto-load a meeting on page load for quick testing
+        window.onload = () => {
+            console.log('🔍 Zoom Debug Tool loaded');
+        };
+    </script>
+</body>
+</html>

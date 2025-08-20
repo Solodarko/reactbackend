@@ -1,0 +1,6 @@
+"Participant Name","Email","Duration (Minutes)","Percentage","Status","Join Time","Leave Time","Student ID","Student Name","Department","Is Authenticated","User Role"
+"Sarah Johnson","sarah.johnson@email.com","3","5%","Absent","8/19/2025, 3:15:14 PM","8/19/2025, 3:18:00 PM","","","","No",""
+"Alex Brown","alex.brown@email.com","51","85%","Present","8/19/2025, 3:16:14 PM","8/19/2025, 4:07:14 PM","","","","No",""
+"John Smith","john.smith@email.com","-1","-2%","Absent","8/19/2025, 3:17:14 PM","8/19/2025, 3:16:00 PM","","","","No",""
+"Emma Davis","emma.davis@email.com","2","3%","In Progress","8/19/2025, 3:18:14 PM","","","","","No",""
+"Mike Wilson","mike.wilson@email.com","42","70%","Absent","8/19/2025, 3:20:14 PM","8/19/2025, 4:02:14 PM","","","","No",""

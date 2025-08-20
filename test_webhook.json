@@ -1,0 +1,15 @@
+{
+  "event": "meeting.participant_joined",
+  "payload": {
+    "object": {
+      "id": "83483259445",
+      "topic": "Test Meeting",
+      "participant": {
+        "id": "test_participant_id",
+        "user_id": "test_user_id",
+        "user_name": "Test Participant",
+        "email": "test@example.com"
+      }
+    }
+  }
+}

@@ -851,3 +851,7 @@ process.on('uncaughtException', (error) => {
 });
 
 console.log('🛡️ Process handlers registered for graceful shutdown');
+// QR Token Test Routes
+const qrTokenTestRoutes = require('./routes/qrTokenTest');
+app.use('/api/qr-token-test', qrTokenTestRoutes);
+console.log('🔬 QR Token Test routes mounted at /api/qr-token-test');

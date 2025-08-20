@@ -1,0 +1,11 @@
+{
+  "meetingId": "87292997282",
+  "name": "John Smith",
+  "email": "john.smith@university.edu",
+  "joinTime": "2025-08-17T22:48:30.000Z",
+  "attendanceStatus": "In Progress",
+  "attendancePercentage": 85,
+  "duration": 0,
+  "isActive": true,
+  "device": "Desktop"
+}

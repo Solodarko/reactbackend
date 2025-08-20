@@ -1,0 +1,15 @@
+{
+  "topic": "LIVE PARTICIPANT TRACKING TEST - Meeting Participants Dashboard",
+  "type": 1,
+  "duration": 120,
+  "settings": {
+    "host_video": true,
+    "participant_video": true,
+    "join_before_host": true,
+    "mute_upon_entry": false,
+    "waiting_room": false,
+    "approval_type": 0,
+    "auto_recording": "none"
+  },
+  "agenda": "Real-time participant tracking test for the Meeting Participants dashboard. Join this meeting to see live participant data in the admin dashboard."
+}

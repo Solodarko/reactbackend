@@ -1,0 +1,11 @@
+{
+  "meetingId": "87292997282",
+  "name": "Sarah Johnson",
+  "email": "sarah.johnson@university.edu",
+  "joinTime": "2025-08-17T22:47:15.000Z",
+  "attendanceStatus": "Present",
+  "attendancePercentage": 95,
+  "duration": 2,
+  "isActive": true,
+  "device": "Mobile"
+}

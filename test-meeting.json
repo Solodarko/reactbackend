@@ -1,0 +1,13 @@
+{
+  "topic": "85% Attendance Tracker Test Meeting",
+  "agenda": "Testing the 85% attendance threshold functionality",
+  "duration": 30,
+  "type": 1,
+  "settings": {
+    "host_video": true,
+    "participant_video": true,
+    "mute_upon_entry": true,
+    "waiting_room": false,
+    "auto_recording": "none"
+  }
+}
